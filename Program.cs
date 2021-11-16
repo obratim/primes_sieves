@@ -296,6 +296,24 @@ namespace primes_sieve
             MarkSieve(23);
             MarkSieve(29);
 
+            /*for (var i = 1U; i <= lim; ++i)
+            {
+                var tasks = new Task<ulong>[8];
+                tasks[0] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x01) == 0) { var prime = i * Frame + 01;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[1] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x02) == 0) { var prime = i * Frame + 07;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[2] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x04) == 0) { var prime = i * Frame + 11;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[3] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x08) == 0) { var prime = i * Frame + 13;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[4] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x10) == 0) { var prime = i * Frame + 17;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[5] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x20) == 0) { var prime = i * Frame + 19;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[6] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x40) == 0) { var prime = i * Frame + 23;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[7] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x80) == 0) { var prime = i * Frame + 29;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+
+                Task.WaitAll(tasks);
+                for (var j = 0; j < tasks.Length; ++j)
+                    if (tasks[j].Result != 0)
+                        yield return tasks[j].Result;
+            }*/
+
             var j = Frame;
             for (var i = 1U; i <= lim; ++i, j += Frame)
             {
