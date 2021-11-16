@@ -9,8 +9,8 @@ namespace primes_sieve_source_generator
     [Generator]
     public class SieveGenerator : ISourceGenerator
     {
-        public const int FrameLevel = 3;
-        public const ulong SieveSize = 1_000_000;
+        public const int FrameLevel = 4;
+        public const ulong SieveSize = 10_000_000;
         
         public void Execute(GeneratorExecutionContext context)
         {
@@ -35,7 +35,7 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
             const ulong N = {SieveSize.ToString("### ### ### ### ### ###").Trim().Replace(' ', '_')};
             const ulong MaxNumber = Frame * N;
             var lim = (ulong)(Math.Sqrt(MaxNumber) / Frame) + 1;
-            var sieve = new byte[N];
+            var sieve = new ulong[N];
 
             void MarkSieve(ulong prime)
             {{
