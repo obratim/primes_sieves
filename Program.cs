@@ -12,7 +12,7 @@ namespace primes_sieve
     {
         static void Main(string[] args)
         {
-            //args.Dump("args"); // "16252321" for example
+            //args.Dump("args"); // "16252321" for example or "144449533"
             
             //int skip = 0, take = 30;
             //Primes3().Skip(skip).Take(take).Zip(Primes(CandidatesInPrimes0).Skip(skip).Take(take)).Dump();
