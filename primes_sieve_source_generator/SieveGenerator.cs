@@ -72,7 +72,7 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
 
         private static string PrintCode(int identation, Func<ulong, int, string> codeString, Frame frame)
         {
-            return string.Join("\n" + new string(' ', identation), Enumerable.Repeat(1UL, 1).Concat(frame.PrimesInFrame0.Skip(frame.PrimesCount)).Select(codeString));
+            return string.Join("\n" + new string(' ', identation), frame.CandidatesPerFrame.Select(codeString));
         }
 
         public void Initialize(GeneratorInitializationContext context)
