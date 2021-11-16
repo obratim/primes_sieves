@@ -273,7 +273,7 @@ namespace primes_sieve
 
             void MarkSieve(ulong prime)
             {
-                for (var n = prime + prime; n < N * Frame; n += prime)
+                for (var n = prime + prime; n < MaxNumber; n += prime)
                 {
                     switch (n % Frame)
                     {
@@ -296,28 +296,30 @@ namespace primes_sieve
             MarkSieve(23);
             MarkSieve(29);
 
-            for (var i = 1U; i <= lim; ++i)
+            var j = Frame;
+            for (var i = 1U; i <= lim; ++i, j += Frame)
             {
-                if ((sieve[i] & 0x01) == 0) { var prime = i * Frame + 01; yield return prime; MarkSieve(prime); }
-                if ((sieve[i] & 0x02) == 0) { var prime = i * Frame + 07; yield return prime; MarkSieve(prime); }
-                if ((sieve[i] & 0x04) == 0) { var prime = i * Frame + 11; yield return prime; MarkSieve(prime); }
-                if ((sieve[i] & 0x08) == 0) { var prime = i * Frame + 13; yield return prime; MarkSieve(prime); }
-                if ((sieve[i] & 0x10) == 0) { var prime = i * Frame + 17; yield return prime; MarkSieve(prime); }
-                if ((sieve[i] & 0x20) == 0) { var prime = i * Frame + 19; yield return prime; MarkSieve(prime); }
-                if ((sieve[i] & 0x40) == 0) { var prime = i * Frame + 23; yield return prime; MarkSieve(prime); }
-                if ((sieve[i] & 0x80) == 0) { var prime = i * Frame + 29; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x01) == 0) { var prime = j + 01; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x02) == 0) { var prime = j + 07; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x04) == 0) { var prime = j + 11; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x08) == 0) { var prime = j + 13; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x10) == 0) { var prime = j + 17; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x20) == 0) { var prime = j + 19; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x40) == 0) { var prime = j + 23; yield return prime; MarkSieve(prime); }
+                if ((sieve[i] & 0x80) == 0) { var prime = j + 29; yield return prime; MarkSieve(prime); }
             }
 
-            for (var i = lim + 1; i < N; ++i)
+            j = (lim + 1) * Frame;
+            for (var i = lim + 1; i < N; ++i, j += Frame)
             {
-                if ((sieve[i] & 0x01) == 0) { yield return i * Frame + 01; }
-                if ((sieve[i] & 0x02) == 0) { yield return i * Frame + 07; }
-                if ((sieve[i] & 0x04) == 0) { yield return i * Frame + 11; }
-                if ((sieve[i] & 0x08) == 0) { yield return i * Frame + 13; }
-                if ((sieve[i] & 0x10) == 0) { yield return i * Frame + 17; }
-                if ((sieve[i] & 0x20) == 0) { yield return i * Frame + 19; }
-                if ((sieve[i] & 0x40) == 0) { yield return i * Frame + 23; }
-                if ((sieve[i] & 0x80) == 0) { yield return i * Frame + 29; }
+                if ((sieve[i] & 0x01) == 0) { yield return j + 01; }
+                if ((sieve[i] & 0x02) == 0) { yield return j + 07; }
+                if ((sieve[i] & 0x04) == 0) { yield return j + 11; }
+                if ((sieve[i] & 0x08) == 0) { yield return j + 13; }
+                if ((sieve[i] & 0x10) == 0) { yield return j + 17; }
+                if ((sieve[i] & 0x20) == 0) { yield return j + 19; }
+                if ((sieve[i] & 0x40) == 0) { yield return j + 23; }
+                if ((sieve[i] & 0x80) == 0) { yield return j + 29; }
             }
         }
     }
