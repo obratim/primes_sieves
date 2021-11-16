@@ -43,7 +43,7 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
                 {{
                     switch (n % Frame)
                     {{
-                        {PrintCode(24, (n, i) => $"case {n}: sieve[n / Frame] |= {1UL << i}; break;", frame)}
+                        {PrintCode(24, (n, i) => $"case {n:0000}: sieve[n / Frame] |= 0x{1UL << i:x4}; break;", frame)}
                     }}
                 }}
             }}
@@ -51,13 +51,13 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
             var j = Frame;
             for (var i = 1U; i <= lim; ++i, j += Frame)
             {{
-                {PrintCode(16, (n, i) => $"if ((sieve[i] & {1UL << i}) == 0) {{ var prime = j + {n}; yield return prime; MarkSieve(prime); }}", frame)}
+                {PrintCode(16, (n, i) => $"if ((sieve[i] & 0x{1UL << i:x4}) == 0) {{ var prime = j + {n:0000}; yield return prime; MarkSieve(prime); }}", frame)}
             }}
 
             j = (lim + 1) * Frame;
             for (var i = lim + 1; i < N; ++i, j += Frame)
             {{
-                {PrintCode(16, (n, i) => $"if ((sieve[i] & {1UL << i}) == 0) {{ yield return j + {n}; }}", frame)}
+                {PrintCode(16, (n, i) => $"if ((sieve[i] & 0x{1UL << i:x4}) == 0) {{ yield return j + {n:0000}; }}", frame)}
             }}
             
             yield break;
