@@ -146,7 +146,7 @@ namespace primes_sieve
             yield return 3;
             yield return 5;
 
-            const int N = 10_000_000;
+            const int N = 1_000_000;
             const int MaxNumber = N * 6;
             var lim = (int)(Math.Sqrt(MaxNumber) / 6);
             var sieve = new byte[N];
@@ -154,11 +154,11 @@ namespace primes_sieve
                 [i] - candidate
                 // 2 candidates per frame
                 [0]&1 - 1 * 6 + 1 prime?0:1
-                [0]&2 - 2 * 6 + 5 prime?0:1
+                [0]&2 - 1 * 6 + 5 prime?0:1
                 [1]&1 - 2 * 6 + 1 prime?0:1
                 [1]&2 - 2 * 6 + 5 prime?0:1
                 [2]&1 - 3 * 6 + 1 prime?0:1
-                [2]&2 - 2 * 6 + 5 prime?0:1
+                [2]&2 - 3 * 6 + 5 prime?0:1
                 [3]&1 - 4 * 6 + 1 prime?0:1
                 [3]&2 - 4 * 6 + 5 prime?0:1
             */
@@ -263,14 +263,14 @@ namespace primes_sieve
             /*
                 [i] - candidate
                 // 8 candidates per frame
-                [0]&001 - 0 * 30 + 01 prime?
-                [0]&002 - 0 * 30 + 07 prime?
-                [0]&004 - 0 * 30 + 11 prime?
-                [0]&008 - 0 * 30 + 13 prime?
-                [0]&016 - 0 * 30 + 17 prime?
-                [0]&032 - 0 * 30 + 19 prime?
-                [0]&064 - 0 * 30 + 23 prime?
-                [0]&128 - 0 * 30 + 29 prime?
+                [0]&001 - 1 * 30 + 01 prime?0:1
+                [0]&002 - 1 * 30 + 07 prime?0:1
+                [0]&004 - 1 * 30 + 11 prime?0:1
+                [0]&008 - 1 * 30 + 13 prime?0:1
+                [0]&016 - 1 * 30 + 17 prime?0:1
+                [0]&032 - 1 * 30 + 19 prime?0:1
+                [0]&064 - 1 * 30 + 23 prime?0:1
+                [0]&128 - 1 * 30 + 29 prime?0:1
             */
 
             void MarkSieve(ulong prime)
