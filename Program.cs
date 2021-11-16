@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace primes_sieve
@@ -296,25 +298,64 @@ namespace primes_sieve
             MarkSieve(23);
             MarkSieve(29);
 
-            /*for (var i = 1U; i <= lim; ++i)
+            var j = Frame;
+            /*var bitsQueue = new ConcurrentQueue<(ulong frameId, byte bitIndex)>();
+            void QueueMarkSieve(ulong prime)
+            {
+                for (var n = prime + prime; n < MaxNumber; n += prime)
+                {
+                    switch (n % Frame)
+                    {
+                        case 01: bitsQueue.Enqueue((n / Frame, 0x1)); break;
+                        case 07: bitsQueue.Enqueue((n / Frame, 0x2)); break;
+                        case 11: bitsQueue.Enqueue((n / Frame, 0x4)); break;
+                        case 13: bitsQueue.Enqueue((n / Frame, 0x8)); break;
+                        case 17: bitsQueue.Enqueue((n / Frame, 0x10)); break;
+                        case 19: bitsQueue.Enqueue((n / Frame, 0x20)); break;
+                        case 23: bitsQueue.Enqueue((n / Frame, 0x40)); break;
+                        case 29: bitsQueue.Enqueue((n / Frame, 0x80)); break;
+                    }
+                }
+            }
+
+            for (var i = 1U; i <= lim; ++i, j += Frame)
             {
                 var tasks = new Task<ulong>[8];
-                tasks[0] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x01) == 0) { var prime = i * Frame + 01;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
-                tasks[1] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x02) == 0) { var prime = i * Frame + 07;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
-                tasks[2] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x04) == 0) { var prime = i * Frame + 11;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
-                tasks[3] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x08) == 0) { var prime = i * Frame + 13;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
-                tasks[4] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x10) == 0) { var prime = i * Frame + 17;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
-                tasks[5] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x20) == 0) { var prime = i * Frame + 19;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
-                tasks[6] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x40) == 0) { var prime = i * Frame + 23;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
-                tasks[7] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x80) == 0) { var prime = i * Frame + 29;  MarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[0] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x01) == 0) { var prime = j + 01;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[1] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x02) == 0) { var prime = j + 07;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[2] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x04) == 0) { var prime = j + 11;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[3] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x08) == 0) { var prime = j + 13;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[4] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x10) == 0) { var prime = j + 17;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[5] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x20) == 0) { var prime = j + 19;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[6] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x40) == 0) { var prime = j + 23;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+                tasks[7] = Task.Factory.StartNew<ulong>(() => { if ((sieve[i] & 0x80) == 0) { var prime = j + 29;  QueueMarkSieve(prime); return prime; } else return 0; }, TaskCreationOptions.LongRunning);
+
+                using var cs = new CancellationTokenSource();
+                var controlTask = Task.Factory.StartNew(o => {
+                    var token = (CancellationToken)o;
+                    while (!token.IsCancellationRequested)
+                    {
+                        while (bitsQueue.TryDequeue(out var bitsItem))
+                        {
+                            sieve[bitsItem.frameId] |= bitsItem.bitIndex;
+                        }
+                    }
+                    while (bitsQueue.TryDequeue(out var bitsItem))
+                    {
+                        sieve[bitsItem.frameId] |= bitsItem.bitIndex;
+                    }
+                },
+                cs.Token,
+                TaskCreationOptions.LongRunning);
 
                 Task.WaitAll(tasks);
-                for (var j = 0; j < tasks.Length; ++j)
-                    if (tasks[j].Result != 0)
-                        yield return tasks[j].Result;
+                cs.Cancel();
+                for (var ii = 0; ii < tasks.Length; ++ii)
+                    if (tasks[ii].Result != 0)
+                        yield return tasks[ii].Result;
+                controlTask.Wait();
             }*/
 
-            var j = Frame;
             for (var i = 1U; i <= lim; ++i, j += Frame)
             {
                 if ((sieve[i] & 0x01) == 0) { var prime = j + 01; yield return prime; MarkSieve(prime); }
