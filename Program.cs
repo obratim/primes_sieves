@@ -273,9 +273,12 @@ namespace primes_sieve
                 [0]&128 - 1 * 30 + 29 prime?0:1
             */
 
+            // ulong NumberSevenTimes(ulong prime) => prime + prime + prime + prime + prime + prime + prime;
+
             void MarkSieve(ulong prime)
             {
-                for (var n = prime + prime; n < MaxNumber; n += prime)
+                // starting with 7*prime couse lesser prime multiplier is apriory excluded
+                for (var n = 7 * prime; n < MaxNumber; n += prime)
                 {
                     switch (n % Frame)
                     {
