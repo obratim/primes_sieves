@@ -29,7 +29,7 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
     {{
         public static partial IEnumerable<ulong> Primes()
         {{
-            {string.Join(" ", frame.PrimesInFrame0.Select(n => $"yield return {n};"))}
+            {string.Join("\n            ", frame.PrimesInFrame0.Select(n => $"yield return {n};"))}
 
             const ulong Frame = {frame.FrameVolume};
             const ulong N = {SieveSize.ToString("### ### ### ### ### ###").Trim().Replace(' ', '_')};
