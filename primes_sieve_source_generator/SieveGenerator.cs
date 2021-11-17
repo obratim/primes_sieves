@@ -43,7 +43,6 @@ namespace primes_sieve_source_generator
             Console.WriteLine("Executing code generator...");
             System.IO.File.WriteAllText("/tmp/codegeneratorlog.txt", "Executing");
             var mainMethod = context.Compilation.GetEntryPoint(context.CancellationToken);
-            var frame = Frame;
             string source = $@"
 using System;
 using System.Collections;
@@ -60,9 +59,9 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
         
         public static partial IEnumerable<ulong> Primes()
         {{
-            {string.Join("\n            ", frame.PrimesInFrame0.Select(n => $"yield return {n};"))}
+            {string.Join("\n            ", Frame.PrimesInFrame0.Select(n => $"yield return {n};"))}
 
-            const ulong Frame = {frame.FrameVolume};
+            const ulong Frame = {Frame.FrameVolume};
             const ulong N = {SieveSize.ToString("### ### ### ### ### ###").Trim().Replace(' ', '_')};
             const ulong MaxNumber = Frame * N;
             var lim = (ulong)(Math.Sqrt(MaxNumber) / Frame) + 1;
@@ -73,25 +72,25 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
 
             void MarkSieve(ulong prime)
             {{
-                for (var n = {frame.PrimesInFrame0.Skip(frame.PrimesCount).First()} * prime; n < MaxNumber; n += prime)
+                for (var n = {Frame.PrimesInFrame0.Skip(Frame.PrimesCount).First()} * prime; n < MaxNumber; n += prime)
                 {{
                     switch (n % Frame)
                     {{
-                        {PrintCode(24, (n, i) => $"case {n:0000}: sieve[n / Frame]{MarkSieveItemCode(n, i)}; break;", frame)}
+                        {PrintCode(24, (n, i) => $"case {n:0000}: sieve[n / Frame]{MarkSieveItemCode(n, i)}; break;")}
                     }}
                 }}
             }}
-            {string.Join("\n            ", frame.PrimesInFrame0.Skip(frame.PrimesCount).Select(n => $"MarkSieve({n});"))}
+            {string.Join("\n            ", Frame.PrimesInFrame0.Skip(Frame.PrimesCount).Select(n => $"MarkSieve({n});"))}
             var j = Frame;
             for (var i = 1U; i <= lim; ++i, j += Frame)
             {{
-                {PrintCode(16, (n, i) => $"if ({GetSieveItemCode(n, i)}) {{ var prime = j + {n:0000}; yield return prime; MarkSieve(prime); }}", frame)}
+                {PrintCode(16, (n, i) => $"if ({GetSieveItemCode(n, i)}) {{ var prime = j + {n:0000}; yield return prime; MarkSieve(prime); }}")}
             }}
 
             j = (lim + 1) * Frame;
             for (var i = lim + 1; i < N; ++i, j += Frame)
             {{
-                {PrintCode(16, (n, i) => $"if ({GetSieveItemCode(n, i)}) {{ yield return j + {n:0000}; }}", frame)}
+                {PrintCode(16, (n, i) => $"if ({GetSieveItemCode(n, i)}) {{ yield return j + {n:0000}; }}")}
             }}
             
             yield break;
@@ -104,9 +103,9 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
             System.IO.File.WriteAllText("/tmp/codegeneratorlog.txt", source);
         }
 
-        private static string PrintCode(int identation, Func<ulong, int, string> codeString, Frame frame)
+        private static string PrintCode(int identation, Func<ulong, int, string> codeString)
         {
-            return string.Join("\n" + new string(' ', identation), frame.CandidatesPerFrame.Select(codeString));
+            return string.Join("\n" + new string(' ', identation), Frame.CandidatesPerFrame.Select(codeString));
         }
 
         public void Initialize(GeneratorInitializationContext context)
