@@ -10,7 +10,7 @@ namespace primes_sieve_source_generated
             Console.WriteLine(description);
             switch (data)
             {
-                case IEnumerable collection:
+                case IEnumerable collection when data is not string:
                     var count = 0;
                     foreach (var item in collection)
                     {
