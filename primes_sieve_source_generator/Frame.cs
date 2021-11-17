@@ -75,7 +75,7 @@ namespace primes_sieve_source_generator
             yield return 23;
             yield return 29;
 
-            const ulong N = 10_000_000;
+            const ulong N = 1_000_000;
             const ulong MaxNumber = Frame * N;
             var lim = (ulong)(Math.Sqrt(MaxNumber) / Frame) + 1;
             //lim = N;
