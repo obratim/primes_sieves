@@ -2,22 +2,25 @@
 using System.Collections;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 
 namespace primes_sieve_source_generator
 {
     [Generator]
     public class SieveGenerator : ISourceGenerator
     {
-        public const int FrameLevel = 3;
+        // define parameters for generated algorithm:
         public const ulong SieveSize = 10_000_000;
+        public const int FrameLevel = 3;
+        private static readonly Type TypeOfSieve = typeof(byte);
         /*
             for TypeOfSieve [byte] use FrameLevel 2 or 3 (because frame level 3 has 8 candidates per frame)
             for [ulong] - 2, 3, 4 (because frame level 4 has 48 candidates per frame)
             with [BiteArray] any FrameLevel supported
         */
+
+        
+        #region constants effects
         private static readonly Frame Frame = new Frame(FrameLevel);
-        private static readonly Type TypeOfSieve = typeof(byte);
         private static readonly Func<string> SieveItemConstructor = TypeOfSieve switch
         {
             {} when TypeOfSieve == typeof(byte) => null,
@@ -41,6 +44,7 @@ namespace primes_sieve_source_generator
             {} when TypeOfSieve == typeof(BitArray) => (n, i) => $"!sieve[i].Get({i:0000})",
             _ => throw new NotImplementedException($"Not implemented work with sieve of type {TypeOfSieve.FullName}"),
         };
+        #endregion
         
         public void Execute(GeneratorExecutionContext context)
         {
