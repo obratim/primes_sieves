@@ -9,8 +9,13 @@ namespace primes_sieve_source_generator
     [Generator]
     public class SieveGenerator : ISourceGenerator
     {
-        public const int FrameLevel = 4;
+        public const int FrameLevel = 3;
         public const ulong SieveSize = 10_000_000;
+        /*
+            for TypeOfSieve [byte] use FrameLevel 2 or 3 (because frame level 3 has 8 candidates per frame)
+            for [ulong] - 2, 3, 4 (because frame level 4 has 48 candidates per frame)
+            with [BiteArray] any FrameLevel supported
+        */
         private static readonly Frame Frame = new Frame(FrameLevel);
         private static readonly Type TypeOfSieve = typeof(byte);
         private static readonly Func<string> SieveItemConstructor = TypeOfSieve switch
