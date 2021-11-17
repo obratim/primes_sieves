@@ -98,7 +98,7 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
 }}
 ";
 
-            context.AddSource("generatedSource.cs", SourceText.From(source, System.Text.Encoding.UTF8));
+            context.AddSource("generatedSource.cs", source);
             System.IO.File.WriteAllText("/tmp/codegeneratorlog.txt", source);
         }
 
