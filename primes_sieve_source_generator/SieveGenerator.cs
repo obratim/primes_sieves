@@ -28,6 +28,9 @@ namespace {mainMethod.ContainingNamespace.ToDisplayString()}
 {{
     partial class {mainMethod.ContainingType.Name}
     {{
+        public static partial int FrameLevel() => {FrameLevel};
+        public static partial ulong SieveSize() => {SieveSize};
+        
         public static partial IEnumerable<ulong> Primes()
         {{
             {string.Join("\n            ", frame.PrimesInFrame0.Select(n => $"yield return {n};"))}

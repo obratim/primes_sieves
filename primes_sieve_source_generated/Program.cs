@@ -36,5 +36,8 @@ namespace primes_sieve_source_generated
         }
 
         public static partial IEnumerable<ulong> Primes();
+
+        public static partial int FrameLevel();
+        public static partial ulong SieveSize();
     }
 }
