@@ -10,8 +10,8 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/primes_sieve_source_generated/bin/Debug/net5.0/primes_sieve_source_generated.dll",
-            "args": [ "1000000" ],
+            "program": "${workspaceFolder}/primes_sieve_source_generated/bin/Debug/net6.0/primes_sieve_source_generated.dll",
+            "args": [ "10000000" ],
             "cwd": "${workspaceFolder}/primes_sieve_source_generated",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
